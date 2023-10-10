@@ -17,6 +17,8 @@ public class PizzaController : ControllerBase
         PizzaService.GetAll();
 
 
+
+
     [HttpGet("{id}")]
     public ActionResult<Pizza> Get(int id)
     {
@@ -27,6 +29,7 @@ public class PizzaController : ControllerBase
         return pizza;
     } 
 
+
     [HttpPost]
     public IActionResult Create(Pizza pizza)
     {            
@@ -34,7 +37,21 @@ public class PizzaController : ControllerBase
         return CreatedAtAction(nameof(Get), new { id = pizza.Id }, pizza);
     }
 
-    // PUT action
+
+    [HttpPut("{id}")]
+    public IActionResult Update(int id, Pizza pizza)
+    {
+        if (id != pizza.Id)
+            return BadRequest();
+            
+        var existingPizza = PizzaService.Get(id);
+        if(existingPizza is null)
+            return NotFound();
+    
+        PizzaService.Update(pizza);           
+    
+        return NoContent();
+    }
 
     // DELETE action
 }
